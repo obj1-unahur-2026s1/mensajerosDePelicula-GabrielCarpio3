@@ -1,0 +1,72 @@
+import mensajeros.*
+import destinos.*
+import paquete.*
+import vehiculos.*
+
+describe "test de roberto y neo" {
+  test "roberto pesa 90 y puede llevar paquetes" {
+    paquete.serPagado()
+    roberto.cambiarTransporte(camion)
+    assert.that(roberto.puedeLlevarPaquete(puenteBrooklyn))
+  }
+  test "neo con credito no puede llevar paquete no pago a matrix" {
+    assert.notThat(paquete.puedeSerEntregado(neo, matrix))
+  }
+
+}
+
+describe "tests empresa de mensajeria" {
+
+  test "1 - contratar mensajero" {
+    empresaDeMensajeria.despedirATodos()
+    empresaDeMensajeria.contratarMensajero(roberto)
+
+    assert.equals(1, empresaDeMensajeria.mensajeros().size())
+  }
+
+  test "2 - despedir mensajero" {
+    empresaDeMensajeria.despedirATodos()
+    empresaDeMensajeria.contratarMensajero(roberto)
+    empresaDeMensajeria.despedirMensajero(roberto)
+
+    assert.equals(0, empresaDeMensajeria.mensajeros().size())
+  }
+
+  test "3 - despedir a todos los mensajeros" {
+    empresaDeMensajeria.contratarMensajero(roberto)
+    empresaDeMensajeria.contratarMensajero(neo)
+
+    empresaDeMensajeria.despedirATodos()
+
+    assert.equals(0, empresaDeMensajeria.mensajeros().size())
+  }
+
+  test "4 - es grande cuando tiene mas de dos mensajeros" {
+    empresaDeMensajeria.despedirATodos()
+    empresaDeMensajeria.contratarMensajero(roberto)
+    empresaDeMensajeria.contratarMensajero(neo)
+    empresaDeMensajeria.contratarMensajero(chuck)
+
+    assert.that(empresaDeMensajeria.esGrande())
+  }
+
+  test "5 - primer mensajero puede entregar paquete" {
+    empresaDeMensajeria.despedirATodos()
+    empresaDeMensajeria.contratarMensajero(neo)
+
+    paquete.serPagado()
+
+    assert.that(
+      empresaDeMensajeria.elPrimerMensajeroPuedeEntregarPaquete(paquete, matrix)
+    )
+  }
+
+  test "6 - peso del ultimo mensajero" {
+    empresaDeMensajeria.despedirATodos()
+    empresaDeMensajeria.contratarMensajero(roberto)
+    empresaDeMensajeria.contratarMensajero(chuck)
+
+    assert.equals(chuck.peso(), empresaDeMensajeria.pesoDelUltimoMensajero())
+  }
+
+}
